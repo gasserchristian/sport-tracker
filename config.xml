@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tracking outputPath="./experiment-1">
     <video name="video.mp4" save="True" />
-    <text name="bbox.txt" />
+    <boundingBox name="bbox.txt" />
     <tracker type="csrt" />
 </tracking>
