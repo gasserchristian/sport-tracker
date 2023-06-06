@@ -8,9 +8,6 @@ int main(void)
 {
     Metadata md = Metadata();
     // print recap
-    printf("[i] Input video: %s\n",md.GetVideoPath());
-    printf("[i] Output folder: %s\n",md.GetOutPath());
-    printf("[i] Save video: %s\n",(md.ShouldSaveVideo())?"YES":"NO");
-    printf("[i] Save bbox: %s\n",(md.ShouldSaveBbox())?"YES":"NO");
+    md.Recap();
     return 0;
 }

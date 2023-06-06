@@ -11,7 +11,7 @@ public:
     const char* GetTrackerType() { return this->trackerType_; };
     bool ShouldSaveVideo() { return this->saveVideo_; };
     bool ShouldSaveBbox() { return this->saveBbox_; };
-    void Run_();
+    void Recap();
 
 private:
     const char* outPath_;

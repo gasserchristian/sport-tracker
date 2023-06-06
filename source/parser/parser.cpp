@@ -73,3 +73,16 @@ void Metadata::VerifyElement_(tinyxml2::XMLElement* el) {
         }
     }
 }
+
+void Metadata::Recap() {
+    printf("[i] Input video: %s\n",this->GetVideoPath());
+    printf("[i] Output folder: %s\n",this->GetOutPath());
+    printf(
+        "[i] Save video: %s\n",
+        (this->ShouldSaveVideo())?"YES":"NO"
+    );
+    printf(
+        "[i] Save bbox: %s\n",
+        (this->ShouldSaveBbox())?"YES":"NO"
+    );
+}
