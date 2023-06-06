@@ -17,44 +17,61 @@ Metadata::Metadata() {
 	{
 		printf( "[i] Successful read of 'config.xml'.\n");
 	}
+    this->Parse_(doc);
 
+}
+
+void Metadata::Parse_(tinyxml2::XMLDocument& doc)
+{
     // Check if outer tag there
     tinyxml2::XMLElement* ctx = doc.FirstChildElement();
-    if (!ctx) {
+    if (!ctx)
+    {
         printf("[e] Error getting tracking data from XML");
         exit(1);
-    } 
-    
+    }
+
     // Store output path
     this->outPath_ = ctx->Attribute("outputPath");
-    if (!this->outPath_) {
+    if (!this->outPath_)
+    {
         this->outPath_ = "./";
     }
 
     // Analyse document
-    tinyxml2::XMLElement* child = ctx->FirstChildElement();
-    const char* tagName;
-    while(child) {
+    tinyxml2::XMLElement *child = ctx->FirstChildElement();
+    const char *tagName;
+    while (child)
+    {
         this->VerifyElement_(child);
         tagName = child->Name();
-        if(strcmp(tagName,"video")==0) {
+        if (strcmp(tagName, "video") == 0)
+        {
             this->videoFile_ = child->Attribute("name");
-            if(strcmp(child->Attribute("save"),"True")==0) {
+            if (strcmp(child->Attribute("save"), "True") == 0)
+            {
                 this->saveVideo_ = true;
-            } else {
+            }
+            else
+            {
                 this->saveVideo_ = false;
             }
-        } else if(strcmp(tagName,"boundingBox")==0) {
+        }
+        else if (strcmp(tagName, "boundingBox") == 0)
+        {
             this->saveBbox_ = true;
             this->bboxFile_ = child->Attribute("name");
-            if(!this->bboxFile_) {
+            if (!this->bboxFile_)
+            {
                 this->bboxFile_ = "boundingbox.txt";
             }
-        } else if(strcmp(tagName,"tracker")==0) {
+        }
+        else if (strcmp(tagName, "tracker") == 0)
+        {
             this->trackerType_ = child->Attribute("type");
         }
         child = child->NextSiblingElement();
-    } 
+    }
 }
 
 void Metadata::VerifyElement_(tinyxml2::XMLElement* el) {
