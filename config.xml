@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<tracking name="dev">
+    <video path="video.mp4" />
+    <tracker type="csrt" />
+</tracking>
