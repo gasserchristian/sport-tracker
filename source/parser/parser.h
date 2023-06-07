@@ -28,6 +28,7 @@ public:
      * @return Location of the output folder
      */
     const char* GetOutPath() { return this->outPath_; };
+    
     /**
      * @brief Get the path of the input video file
      * 
