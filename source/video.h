@@ -9,8 +9,13 @@ class Video {
 
     private : void OpenVideo();
         void InitTracker(cv::Mat frame);
-        const char *path_;
         bool saveBbox_;
+        bool saveVideo_;
+        const char *path_;
+        const char *bboxFolder_;
+        const char *bboxName_;
+        const char *videoFolder_;
+        const char *videoName_;
         cv::VideoCapture *video_;
         cv::Rect2d bbox_;
         cv::Ptr<cv::Tracker> tracker_;

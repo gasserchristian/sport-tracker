@@ -1,18 +1,40 @@
+#include "savebbox.h"
 #include "video.h"
 
+const char *Concat(const char *str1, const char *str2, const char *str3)
+{
+    std::string result = std::string(str1) + std::string(str2);
+    result = result + std::string(str3);
+    return result.c_str();
+}
+
 Video::Video(const char* path) {
-    this->path_ = path;
-    this->OpenVideo();
+    path_ = path;
+    OpenVideo();
 }
 
 void Video::InitTracker(cv::Mat frame)
 {
-    this->tracker_ = cv::TrackerCSRT::create();
-    this->tracker_->init(frame,this->bbox_);
+    tracker_ = cv::TrackerCSRT::create();
+    tracker_->init(frame,this->bbox_);
 }
 
 void Video::Play(bool save, const char *folder, const char *file)
 {
+    // save state
+    this->saveVideo_ = save;
+    this->videoFolder_ = folder;
+    this->videoName_ = file;
+
+    // init file saving instance
+    BboxFile bboxfile;
+    if (this->saveBbox_)
+    {
+        bboxfile.Open(
+            Concat(bboxFolder_, "/", bboxName_)
+        );
+    }
+
     // init 2D image (matrix)
     cv::Mat frame;
     this->video_->read(frame); // get first image
@@ -33,6 +55,7 @@ void Video::Play(bool save, const char *folder, const char *file)
         if (frame.empty())
         {
             printf("[i] end of video\n");
+            bboxfile.Close();
             break;
         }
         // draw a rectangle if there is a bounding box
@@ -40,6 +63,12 @@ void Video::Play(bool save, const char *folder, const char *file)
         {
             cv::rectangle(frame, bboxRect, cv::Scalar(0, 255, 0), 2);
             trackSuccess = this->tracker_->update(frame, bboxRect);
+            bboxfile.SaveLine(
+                bboxRect.x,
+                bboxRect.y,
+                bboxRect.width,
+                bboxRect.height
+            );
         }
         // show the current image
         imshow("Play video", frame);
@@ -52,6 +81,8 @@ void Video::Play(bool save, const char *folder, const char *file)
 void Video::InitBBox(bool save, const char *folder, const char *file)
 {
     this->saveBbox_ = save;
+    this->bboxFolder_ = folder;
+    this->bboxName_ = file;
 
     // get the first video frame
     cv::Mat frame;
