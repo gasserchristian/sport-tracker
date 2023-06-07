@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+# Folders
+opencv
+opencv_contrib
+build
+
+# Heavy files
+*.png
+*.jpg
+*.mp4
