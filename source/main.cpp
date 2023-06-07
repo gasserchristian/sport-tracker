@@ -1,13 +1,18 @@
-#include<opencv2/opencv.hpp>
-#include<opencv2/tracking/tracking.hpp>
 #include<iostream>
 #include<stdio.h>
 #include"./parser/parser.h"
+#include"./video.h"
 
 int main(void)
 {
+    // open and print metadata
     Metadata md = Metadata();
-    // print recap
-    md.Recap();
+    md.Recap(); // print metadata
+
+    // open video
+    Video video = Video(md.GetVideoPath());
+    video.InitBBox();
+    video.Play();
+    
     return 0;
 }
