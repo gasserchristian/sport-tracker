@@ -11,6 +11,8 @@ int main(void)
 
     // open video
     Video video = Video(md.GetVideoPath());
+    video.InitBBox();
+    video.Play();
     
     return 0;
 }

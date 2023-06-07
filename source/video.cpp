@@ -1,11 +1,9 @@
-#include <opencv2/opencv.hpp>
 #include <opencv2/tracking/tracking.hpp>
 #include "video.h"
 
 Video::Video(const char* path) {
     this->path_ = path;
     this->OpenVideo();
-    this->Play();
 }
 
 void Video::Play() {
@@ -26,12 +24,27 @@ void Video::Play() {
             printf("[i] end of video\n");
             break;
         }
+        if (!this->bbox_.empty())
+        {
+            cv::rectangle(frame, this->bbox_, cv::Scalar(0, 255, 0), 2);
+            printf("height %f\n",this->bbox_.height);
+        }
         // show the current image
         imshow("Play video", frame);
         // slow down the loop to see the video
         if (cv::waitKey(5) >= 0)
             break;
     }
+}
+
+void Video::InitBBox() {
+    cv::Mat frame;
+    this->video_->read(frame);
+    cv::namedWindow("ROI selection", cv::WINDOW_NORMAL);
+    cv::resizeWindow("ROI selection", frame.cols / 2, frame.rows / 2);
+    cv::Rect2d bbox =  cv::selectROI("ROI selection", frame);
+    this->bbox_ = bbox;
+    cv::destroyAllWindows();
 }
 
 void Video::OpenVideo() {

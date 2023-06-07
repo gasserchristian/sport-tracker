@@ -1,13 +1,14 @@
-namespace cv
-{
-    class VideoCapture;
-}
+#include <opencv2/opencv.hpp>
+
 class Video {
     public:
         Video(const char *path);
         void Play();
+        void InitBBox();
+
     private:
-        const char* path_;
         void OpenVideo();
+        const char *path_;
         cv::VideoCapture *video_;
+        cv::Rect2d bbox_;
 };
