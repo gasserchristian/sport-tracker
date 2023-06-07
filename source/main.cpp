@@ -9,10 +9,20 @@ int main(void)
     Metadata md = Metadata();
     md.Recap(); // print metadata
 
-    // open video
+    // open video and init bbox
     Video video = Video(md.GetVideoPath());
-    video.InitBBox();
-    video.Play();
-    
+    video.InitBBox(
+        md.ShouldSaveBbox(),
+        md.GetOutPath(),
+        md.GetBboxPath()
+    );
+
+    // Play video
+    video.Play(
+        md.ShouldSaveVideo(),
+        md.GetOutPath(),
+        md.GetVideoPath()
+    );
+
     return 0;
 }

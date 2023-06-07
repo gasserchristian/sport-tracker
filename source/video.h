@@ -4,13 +4,13 @@
 class Video {
     public:
         Video(const char *path);
-        void Play();
-        void InitBBox();
+        void Play(bool save, const char *folder, const char *file);
+        void InitBBox(bool save, const char *folder, const char *file);
 
-    private:
-        void OpenVideo();
+    private : void OpenVideo();
         void InitTracker(cv::Mat frame);
         const char *path_;
+        bool saveBbox_;
         cv::VideoCapture *video_;
         cv::Rect2d bbox_;
         cv::Ptr<cv::Tracker> tracker_;

@@ -11,7 +11,8 @@ void Video::InitTracker(cv::Mat frame)
     this->tracker_->init(frame,this->bbox_);
 }
 
-void Video::Play() {
+void Video::Play(bool save, const char *folder, const char *file)
+{
     // init 2D image (matrix)
     cv::Mat frame;
     this->video_->read(frame); // get first image
@@ -48,7 +49,10 @@ void Video::Play() {
     }
 }
 
-void Video::InitBBox() {
+void Video::InitBBox(bool save, const char *folder, const char *file)
+{
+    this->saveBbox_ = save;
+
     // get the first video frame
     cv::Mat frame;
     this->video_->read(frame);
