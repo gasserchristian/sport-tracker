@@ -9,5 +9,5 @@ class Video {
     private:
         const char* path_;
         void OpenVideo();
-        // cv::VideoCapture video_;
+        cv::VideoCapture *video_;
 };
