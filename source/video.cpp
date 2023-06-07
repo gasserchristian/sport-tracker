@@ -1,4 +1,3 @@
-#include <opencv2/tracking/tracking.hpp>
 #include "video.h"
 
 Video::Video(const char* path) {
@@ -6,10 +5,21 @@ Video::Video(const char* path) {
     this->OpenVideo();
 }
 
+void Video::InitTracker(cv::Mat frame)
+{
+    this->tracker_ = cv::TrackerCSRT::create();
+    this->tracker_->init(frame,this->bbox_);
+}
+
 void Video::Play() {
     // init 2D image (matrix)
     cv::Mat frame;
     this->video_->read(frame); // get first image
+
+    // init tracking variables for looping
+    bool trackSuccess = false; // if pattern detected
+    cv::Rect2d bbox = this->bbox_;
+    cv::Rect bboxRect(bbox.x, bbox.y, bbox.width, bbox.height);
 
     // create visualisation window
     cv::namedWindow("Play video", cv::WINDOW_NORMAL);
@@ -24,10 +34,11 @@ void Video::Play() {
             printf("[i] end of video\n");
             break;
         }
+        // draw a rectangle if there is a bounding box
         if (!this->bbox_.empty())
         {
-            cv::rectangle(frame, this->bbox_, cv::Scalar(0, 255, 0), 2);
-            printf("height %f\n",this->bbox_.height);
+            cv::rectangle(frame, bboxRect, cv::Scalar(0, 255, 0), 2);
+            trackSuccess = this->tracker_->update(frame, bboxRect);
         }
         // show the current image
         imshow("Play video", frame);
@@ -38,13 +49,19 @@ void Video::Play() {
 }
 
 void Video::InitBBox() {
+    // get the first video frame
     cv::Mat frame;
     this->video_->read(frame);
+
+    // select the region of interest
     cv::namedWindow("ROI selection", cv::WINDOW_NORMAL);
     cv::resizeWindow("ROI selection", frame.cols / 2, frame.rows / 2);
     cv::Rect2d bbox =  cv::selectROI("ROI selection", frame);
     this->bbox_ = bbox;
     cv::destroyAllWindows();
+
+    // init the tracker
+    this->InitTracker(frame);
 }
 
 void Video::OpenVideo() {
